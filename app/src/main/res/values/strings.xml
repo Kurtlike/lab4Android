@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">lab4Android</string>
+    <string name="DotInput">DotInput</string>
+    <string name="dotInput">Ввод точек</string>
+    <string name="findFunction">Найти функцию</string>
+    <string name="reload">Обновиь график</string>
+</resources>
