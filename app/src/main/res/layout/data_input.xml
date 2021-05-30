@@ -27,11 +27,11 @@
 
     <ScrollView
         android:id="@+id/dinamicDots"
-        android:layout_width="337dp"
-        android:layout_height="377dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="339dp"
+        android:layout_height="353dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.476"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/clearButton">
 
@@ -47,12 +47,11 @@
         android:id="@+id/addDotButton"
         android:layout_width="338dp"
         android:layout_height="53dp"
+        android:layout_marginTop="24dp"
         android:text="Добавить точку"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.52"
+        app:layout_constraintHorizontal_bias="0.545"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dinamicDots"
-        app:layout_constraintVertical_bias="0.225" />
+        app:layout_constraintTop_toBottomOf="@+id/dinamicDots" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
