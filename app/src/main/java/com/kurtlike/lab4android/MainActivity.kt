@@ -3,13 +3,20 @@ package com.kurtlike.lab4android
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.gson.Gson
+import com.kurtlike.lab4android.chart.DrawChart
 import com.kurtlike.lab4android.datainput.DataInputActivity
+import com.kurtlike.lab4android.datainput.Dot
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
+    val dots = ArrayList<Dot>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -20,15 +27,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         solveFunc.setOnClickListener {
-            val preferences =  getSharedPreferences("Dots", Context.MODE_PRIVATE)
+            val preferences = getSharedPreferences("Dots", MODE_PRIVATE)
             val gson = Gson()
-            var str = ""
-
             preferences.getStringSet("dots", HashSet())?.forEach {
-                val dot = gson.fromJson(it, Dot::class.java)
-                str += dot.index.toString() + " " + dot.x + " " + dot.y + "\n"
+                dots.add(gson.fromJson(it, Dot::class.java))
             }
-            println(str)
+        }
+        chartReload.setOnClickListener {
+            val drawChart = DrawChart(this)
+            drawChart.setSize(chartContainer.width, chartContainer.height)
+            drawChart.setDots(dots)
+            chartContainer.addView(drawChart)
+
         }
     }
 }

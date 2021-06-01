@@ -1,7 +1,5 @@
 package com.kurtlike.lab4android.datainput
 
-import com.kurtlike.lab4android.Dot
-
 class Presets {
     val presets = ArrayList<Preset>()
     init {
