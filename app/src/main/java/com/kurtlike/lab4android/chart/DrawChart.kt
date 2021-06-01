@@ -27,6 +27,9 @@ class DrawChart(context: Context): View(context) {
     private var xIntervals = floatArrayOf(0.1f * xScale, 0.1f * xScale)
     private var yIntervals = floatArrayOf(0.1f * yScale, 0.1f * yScale)
     private var dots = ArrayList<Dot>()
+    var xMoveStart = 0f
+    var yMoveStart = 0f
+
     init{
         paint.color = Color.BLUE
         paint.strokeWidth = 5F
@@ -46,6 +49,7 @@ class DrawChart(context: Context): View(context) {
         createXAxis(canvas)
         createYAxis(canvas)
         addDots(dots,canvas)
+        moveChartListener()
     }
 
     fun createXAxis(canvas: Canvas){
@@ -89,7 +93,7 @@ class DrawChart(context: Context): View(context) {
             path.lineTo((xMax).toFloat(), (yNull - i * scale).toFloat())
             canvas.drawPath(path, paint)
             setTextlLinePreset()
-            canvas.drawText(( - i).toString(), (xNull).toFloat() - 20, (yNull + i * scale).toFloat() + 20, paint)
+            canvas.drawText(( - i).toString(), (xNull).toFloat() - 20, (yNull - i * scale).toFloat() + 20, paint)
         }
 
         val numberOfHatchsMoreNull = (yMax - yNull)/(scale)
@@ -100,7 +104,7 @@ class DrawChart(context: Context): View(context) {
             path.lineTo((xMax).toFloat(), (yNull + i * scale).toFloat())
             canvas.drawPath(path, paint)
             setTextlLinePreset()
-            canvas.drawText(i.toString(), (xNull).toFloat() - 20, (yNull - i * scale).toFloat() + 20, paint)
+            canvas.drawText(i.toString(), (xNull).toFloat() - 20, (yNull + i * scale).toFloat() + 20, paint)
 
         }
 
@@ -145,11 +149,24 @@ class DrawChart(context: Context): View(context) {
     @SuppressLint("ClickableViewAccessibility")
     fun moveChartListener(){
         this.setOnTouchListener { v, event ->
-            when (event?.action) {
+            var xEnd = 0f
+            var yEnd = 0f
+            when (event.action) {
                 MotionEvent.ACTION_DOWN ->{
-                    println("$x $y")
+                    xMoveStart = event.x
+                    yMoveStart = event.y
+                    return@setOnTouchListener true
+                }
+                MotionEvent.ACTION_MOVE ->{
+                    xNull += (-xMoveStart+event.x).toInt()
+                    yNull += (-yMoveStart+event.y).toInt()
+                    xMoveStart = event.x
+                    yMoveStart = event.y
+                    this.invalidate()
+                    return@setOnTouchListener true
                 }
             }
+
             v?.onTouchEvent(event) ?: true
         }
     }

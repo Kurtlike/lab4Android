@@ -109,6 +109,7 @@ class DataInputActivity: Activity() {
         val editor = preferences.edit()
         val gson = Gson()
         val set = HashSet<String>()
+        editor.clear()
         dotList.forEach {
             val jString = gson.toJson(it)
             set.add(jString)
