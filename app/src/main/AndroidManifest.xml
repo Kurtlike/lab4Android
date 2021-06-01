@@ -16,7 +16,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DataInputActivity"
+        <activity android:name=".datainput.DataInputActivity"
             android:label="@string/DotInput">
         </activity>
     </application>

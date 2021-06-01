@@ -4,4 +4,9 @@
     <string name="dotInput">Ввод точек</string>
     <string name="findFunction">Найти функцию</string>
     <string name="reload">Обновиь график</string>
+    <string-array name="presets">
+        <item>Парабола</item>
+        <item>Синусоида</item>
+        <item>Линейная</item>
+    </string-array>
 </resources>
