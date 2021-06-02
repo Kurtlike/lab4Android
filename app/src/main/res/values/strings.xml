@@ -9,4 +9,9 @@
         <item>Синусоида</item>
         <item>Линейная</item>
     </string-array>
+
+    <string-array name="serverSelect">
+        <item>Сервер</item>
+        <item>Локально</item>
+    </string-array>
 </resources>
