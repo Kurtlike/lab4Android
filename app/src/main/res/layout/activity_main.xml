@@ -19,6 +19,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <EditText
+        android:background="@color/cardview_dark_background"
         android:id="@+id/xValue"
         android:layout_width="127dp"
         android:layout_height="44dp"
@@ -38,7 +39,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/chartContainer"
+        app:layout_constraintStart_toStartOf="@+id/xValue"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 

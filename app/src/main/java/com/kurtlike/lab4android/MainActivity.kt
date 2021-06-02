@@ -37,11 +37,12 @@ class MainActivity : AppCompatActivity() {
 
         solveFunc.setOnClickListener {
             loadDots()
+            isFunctionSolve = true
             chartReload.performClick()
         }
         xValueButton.setOnClickListener{
             if(isFunctionSolve){
-
+                println("a")
             }
         }
         chartReload.setOnClickListener {
