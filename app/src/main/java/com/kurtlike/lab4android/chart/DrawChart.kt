@@ -6,9 +6,8 @@ import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import com.kurtlike.lab4android.R
+import com.google.gson.Gson
 import com.kurtlike.lab4android.datainput.Dot
-
 
 class DrawChart(context: Context): View(context) {
     private var chartHeight: Int = 0
@@ -19,14 +18,22 @@ class DrawChart(context: Context): View(context) {
     private var yMax: Int = 0
     private var xNull: Int = 0
     private var yNull: Int = 0
-    private val xScale = 100
-    private val yScale = 100
+    private var xScale = 100
+    private var yScale = 100
     private var paint: Paint = Paint()
     private var path: Path = Path()
     private lateinit var dashPathEffect: DashPathEffect
     private var xIntervals = floatArrayOf(0.1f * xScale, 0.1f * xScale)
     private var yIntervals = floatArrayOf(0.1f * yScale, 0.1f * yScale)
     private var dots = ArrayList<Dot>()
+    private var xMoveStart = 0f
+    private var yMoveStart = 0f
+    private var xUpdateStart =0f
+    private var yUpdateStart =0f
+    //var inTouch = false
+    //var isZoom = false
+    //var xZoomStart = 0f
+    //var yZoomStart = 0f
     init{
         paint.color = Color.BLUE
         paint.strokeWidth = 5F
@@ -46,9 +53,10 @@ class DrawChart(context: Context): View(context) {
         createXAxis(canvas)
         createYAxis(canvas)
         addDots(dots,canvas)
+        moveChartListener()
     }
 
-    fun createXAxis(canvas: Canvas){
+    private fun createXAxis(canvas: Canvas){
         setNormalLinePreset()
         canvas.drawLine(xMin.toFloat(), yNull.toFloat(), xMax.toFloat(), yNull.toFloat(), paint)
         val scale = xScale
@@ -76,7 +84,7 @@ class DrawChart(context: Context): View(context) {
         }
 
     }
-    fun createYAxis(canvas: Canvas){
+    private fun createYAxis(canvas: Canvas){
         setNormalLinePreset()
         canvas.drawLine(xNull.toFloat(), yMax.toFloat(), xNull.toFloat(), yMin.toFloat(), paint)
         val scale = yScale
@@ -89,7 +97,7 @@ class DrawChart(context: Context): View(context) {
             path.lineTo((xMax).toFloat(), (yNull - i * scale).toFloat())
             canvas.drawPath(path, paint)
             setTextlLinePreset()
-            canvas.drawText(( - i).toString(), (xNull).toFloat() - 20, (yNull + i * scale).toFloat() + 20, paint)
+            canvas.drawText(( - i).toString(), (xNull).toFloat() - 20, (yNull - i * scale).toFloat() + 20, paint)
         }
 
         val numberOfHatchsMoreNull = (yMax - yNull)/(scale)
@@ -100,12 +108,12 @@ class DrawChart(context: Context): View(context) {
             path.lineTo((xMax).toFloat(), (yNull + i * scale).toFloat())
             canvas.drawPath(path, paint)
             setTextlLinePreset()
-            canvas.drawText(i.toString(), (xNull).toFloat() - 20, (yNull - i * scale).toFloat() + 20, paint)
+            canvas.drawText(i.toString(), (xNull).toFloat() - 20, (yNull + i * scale).toFloat() + 20, paint)
 
         }
 
     }
-    fun setDottedLinePreset(){
+    private fun setDottedLinePreset(){
         xIntervals = floatArrayOf(0.1f * xScale, 0.1f * xScale)
         yIntervals = floatArrayOf(0.1f * yScale, 0.1f * yScale)
 
@@ -115,14 +123,14 @@ class DrawChart(context: Context): View(context) {
         paint.color = Color.argb(100,0,0,255)
         paint.style = Paint.Style.STROKE
     }
-    fun setNormalLinePreset(){
+    private fun setNormalLinePreset(){
         dashPathEffect = DashPathEffect(floatArrayOf(1F,0F), 0F)
         paint.pathEffect = dashPathEffect
         paint.strokeWidth = 5F
         paint.color = Color.argb(255,0,0,255)
         paint.style = Paint.Style.STROKE
     }
-    fun setTextlLinePreset(){
+    private fun setTextlLinePreset(){
         dashPathEffect = DashPathEffect(floatArrayOf(1F,0F), 0F)
         paint.pathEffect = dashPathEffect
         paint.strokeWidth = 3F
@@ -130,7 +138,7 @@ class DrawChart(context: Context): View(context) {
         paint.color = Color.argb(255,0,0,255)
         paint.style = Paint.Style.STROKE
     }
-    fun addDots(dots:ArrayList<Dot>, canvas: Canvas){
+    private fun addDots(dots:ArrayList<Dot>, canvas: Canvas){
         paint.isAntiAlias = true
         paint.strokeWidth = 20F
         paint.color = Color.argb(255,255,0,0)
@@ -145,13 +153,74 @@ class DrawChart(context: Context): View(context) {
     @SuppressLint("ClickableViewAccessibility")
     fun moveChartListener(){
         this.setOnTouchListener { v, event ->
-            when (event?.action) {
-                MotionEvent.ACTION_DOWN ->{
-                    println("$x $y")
+
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    xMoveStart = event.x
+                    xUpdateStart = event.x
+                    yMoveStart = event.y
+                    yUpdateStart = event.y
+                    println("$event.x $event.y")
+                    //inTouch = true
+                    return@setOnTouchListener true
+                }
+                MotionEvent.ACTION_UP -> {
+                    if(xMoveStart == event.x && yMoveStart == event.y) {
+                        savedot(((event.x - xNull)/xScale).toDouble(), ((event.y - yNull)/-yScale).toDouble())
+                        this.invalidate()
+                    }
+
+                    //inTouch = false
+                    return@setOnTouchListener true
+                }
+                //MotionEvent.ACTION_POINTER_DOWN->{
+                //    xZoomStart = event.x
+                //    xZoomStart = event.y
+                //    isZoom = true
+                //    return@setOnTouchListener true
+                //}
+                MotionEvent.ACTION_MOVE ->{
+                    //it doesn't work now ((
+                    //if(isZoom){
+                    //    val oldXSize = xMoveStart - xZoomStart
+                    //    val newXSize =event.getX(0) - event.getX(1)
+                    //    val oldYSize = yMoveStart - yZoomStart
+                    //    val newYSize =event.getY(0) - event.getY(1)
+//
+                    //    xScale = (100*(newXSize/oldXSize)).toInt()
+                    //    println(xScale)
+                    //    yScale = (100*(newYSize/oldYSize)).toInt()
+                    //    isZoom = false
+                    //    this.invalidate()
+                    //}
+                    //else {
+                    xNull += (-xUpdateStart + event.x).toInt()
+                    yNull += (-yUpdateStart + event.y).toInt()
+                    xUpdateStart = event.x
+                    yUpdateStart = event.y
+                        this.invalidate()
+                        return@setOnTouchListener true
+                    //}
                 }
             }
+
             v?.onTouchEvent(event) ?: true
         }
+    }
+    private fun savedot(x: Double, y:Double){
+        val preferences =  context.getSharedPreferences("Dots", Context.MODE_PRIVATE)
+        val editor = preferences.edit()
+        val gson = Gson()
+        dots.add(Dot(x, y))
+        editor.clear()
+        val set = HashSet<String>()
+        editor.clear()
+        dots.forEach {
+            val jString = gson.toJson(it)
+            set.add(jString)
+        }
+        editor.putStringSet("dots", set)
+        editor.apply()
     }
 
 
