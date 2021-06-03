@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     val dots = ArrayList<Dot>()
     var islocal = true
     var isFunctionSolve = false
-    var xValueAnswer = 0.0
+
     lateinit var serverRequests: ServerRequests
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,12 +40,17 @@ class MainActivity : AppCompatActivity() {
         solveFunc.setOnClickListener {
             loadDots()
             isFunctionSolve = true
-            serverRequests.getFunctionalDots("http://192.168.88.254:8082/lab5/getAnswer",dots)
-            chartReload.performClick()
+            serverRequests.getFunctionalDots("http://192.168.88.254:8082/lab5/getAnswer",dots) {
+                saveDotsForFuncDraw(it)
+                chartReload.performClick()
+            }
+
         }
         xValueButton.setOnClickListener{
             if(isFunctionSolve){
-                xValueAnswer = serverRequests.getXvalue("http://192.168.88.254:8082/lab5/getXValue", xValue.text.toString().toDouble())
+                serverRequests.getXvalue("http://192.168.88.254:8082/lab5/getXValue", xValue.text.toString().toDouble()) {
+                    xValue.setText(it.toString())
+                }
             }
         }
         chartReload.setOnClickListener {
@@ -90,6 +95,18 @@ class MainActivity : AppCompatActivity() {
             dots.add(gson.fromJson(it, Dot::class.java))
         }
     }
-
+    fun saveDotsForFuncDraw(dots: ArrayList<Dot>){
+        val preferences =  getSharedPreferences("DotsForDrawLine", Context.MODE_PRIVATE)
+        val editor = preferences.edit()
+        val gson = Gson()
+        val set = HashSet<String>()
+        editor.clear()
+        dots.forEach {
+            val jString = gson.toJson(it)
+            set.add(jString)
+        }
+        editor.putStringSet("dotsForDrawLine", set)
+        editor.commit()
+    }
 
 }

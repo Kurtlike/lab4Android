@@ -6,8 +6,12 @@ import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import com.kurtlike.lab4android.datainput.Dot
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
 
 class DrawChart(context: Context): View(context) {
     private var chartHeight: Int = 0
@@ -26,6 +30,7 @@ class DrawChart(context: Context): View(context) {
     private var xIntervals = floatArrayOf(0.1f * xScale, 0.1f * xScale)
     private var yIntervals = floatArrayOf(0.1f * yScale, 0.1f * yScale)
     private var dots = ArrayList<Dot>()
+    private var dotsForFunkLune = ArrayList<Dot>()
     private var xMoveStart = 0f
     private var yMoveStart = 0f
     private var xUpdateStart =0f
@@ -52,8 +57,11 @@ class DrawChart(context: Context): View(context) {
         canvas.drawColor(Color.GREEN)
         createXAxis(canvas)
         createYAxis(canvas)
-        addDots(dots,canvas)
+
         moveChartListener()
+        setDotsForFuncLine()
+        drawLineFromDots(dotsForFunkLune, canvas)
+        addDots(dots,canvas)
     }
 
     private fun createXAxis(canvas: Canvas){
@@ -130,6 +138,13 @@ class DrawChart(context: Context): View(context) {
         paint.color = Color.argb(255,0,0,255)
         paint.style = Paint.Style.STROKE
     }
+    private fun setFunkPreset(){
+        dashPathEffect = DashPathEffect(floatArrayOf(1F,0F), 0F)
+        paint.pathEffect = dashPathEffect
+        paint.strokeWidth = 2F
+        paint.color = Color.argb(255,0,255,0)
+        paint.style = Paint.Style.STROKE
+    }
     private fun setTextlLinePreset(){
         dashPathEffect = DashPathEffect(floatArrayOf(1F,0F), 0F)
         paint.pathEffect = dashPathEffect
@@ -147,8 +162,33 @@ class DrawChart(context: Context): View(context) {
             canvas.drawPoint(xNull + xScale * it.x.toFloat() ,yNull - yScale * it.y.toFloat(),paint)
         }
     }
+    private fun drawLineFromDots(dots: ArrayList<Dot>, canvas: Canvas){
+        if(!dots.isEmpty()){
+            dots.sortWith { lhs, rhs ->
+                if (lhs.x > rhs.x) -1 else if (lhs.x < rhs.x) 1 else 0
+            }
+            path.reset()
+
+            path.moveTo(xNull + xScale * dots[0].x.toFloat(),yNull - yScale * dots[0].y.toFloat())
+            dots.forEach {
+                path.lineTo(xNull + xScale * it.x.toFloat() ,yNull - yScale * it.y.toFloat())
+            }
+            canvas.drawPath(path, paint)
+        }
+    }
     fun setDots(dots:ArrayList<Dot>){
         this.dots = dots
+    }
+    private fun setDotsForFuncLine(){
+
+        val preferences = context.getSharedPreferences("DotsForDrawLine", AppCompatActivity.MODE_PRIVATE)
+        val gson = Gson()
+        dotsForFunkLune.clear()
+        preferences.getStringSet("dotsForDrawLine", HashSet())?.forEach {
+            dotsForFunkLune.add(gson.fromJson(it, Dot::class.java))
+        }
+
+
     }
     @SuppressLint("ClickableViewAccessibility")
     fun moveChartListener(){
