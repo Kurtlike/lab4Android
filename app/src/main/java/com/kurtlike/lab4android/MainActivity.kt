@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     val dots = ArrayList<Dot>()
     var islocal = true
     var isFunctionSolve = false
+    var xValueAnswer = 0.0
     lateinit var serverRequests: ServerRequests
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,12 +40,12 @@ class MainActivity : AppCompatActivity() {
         solveFunc.setOnClickListener {
             loadDots()
             isFunctionSolve = true
-            serverRequests.getDunctionalDots("http://192.168.88.254:8082/lab4/getAnswer",dots)
+            serverRequests.getFunctionalDots("http://192.168.88.254:8082/lab5/getAnswer",dots)
             chartReload.performClick()
         }
         xValueButton.setOnClickListener{
             if(isFunctionSolve){
-                println("a")
+                xValueAnswer = serverRequests.getXvalue("http://192.168.88.254:8082/lab5/getXValue", xValue.text.toString().toDouble())
             }
         }
         chartReload.setOnClickListener {
