@@ -1,24 +1,17 @@
-package com.kurtlike.lab4android
+package com.kurtlike.lab5android
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.get
 import com.google.gson.Gson
-import com.kurtlike.lab4android.chart.DrawChart
-import com.kurtlike.lab4android.datainput.DataInputActivity
-import com.kurtlike.lab4android.datainput.Dot
-import com.kurtlike.lab4android.datainput.Presets
+import com.kurtlike.lab5android.chart.DrawChart
+import com.kurtlike.lab5android.datainput.DataInputActivity
+import com.kurtlike.lab5android.datainput.Dot
+import com.kurtlike.lab5android.localBuisness.GoodOldIO
+import com.kurtlike.lab5android.localBuisness.Test
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -26,30 +19,51 @@ class MainActivity : AppCompatActivity() {
     val dots = ArrayList<Dot>()
     var islocal = true
     var isFunctionSolve = false
-
+    var url ="192.168.88.254:8082"
     lateinit var serverRequests: ServerRequests
+    lateinit var goodOldIO: GoodOldIO
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         serverRequests = ServerRequests(this)
+        goodOldIO = Test()
         dotInputButton.setOnClickListener {
             val intent = Intent(this, DataInputActivity::class.java)
             startActivity(intent)
         }
 
         solveFunc.setOnClickListener {
-            loadDots()
-            isFunctionSolve = true
-            serverRequests.getFunctionalDots("http://192.168.88.254:8082/lab5/getAnswer",dots) {
-                saveDotsForFuncDraw(it)
+            if(!islocal){
+                loadDots()
+                serverRequests.getFunctionalDots("http://$url/lab5/getAnswer",dots) {
+                    saveDotsForFuncDraw(it)
+                    chartReload.performClick()
+                }
+                isFunctionSolve = true
+            }
+            else{
+                loadDots()
+                goodOldIO.setDotsForInterpolate(dots)
+                saveDotsForFuncDraw(goodOldIO.getDotsForDraw())
                 chartReload.performClick()
+                isFunctionSolve = true
             }
 
         }
         xValueButton.setOnClickListener{
-            if(isFunctionSolve){
-                serverRequests.getXvalue("http://192.168.88.254:8082/lab5/getXValue", xValue.text.toString().toDouble()) {
-                    xValue.setText(it.toString())
+            if(!islocal) {
+                if (isFunctionSolve) {
+                    serverRequests.getXvalue(
+                        "http://192.168.88.254:8082/lab5/getXValue",
+                        xValue.text.toString().toDouble()
+                    ) {
+                        xValue.setText(it.toString())
+                    }
+                }
+            }
+            else{
+                if (isFunctionSolve) {
+                    xValue.setText(goodOldIO.getXValue(xValue.text.toString().toDouble()).toString())
                 }
             }
         }
@@ -80,8 +94,11 @@ class MainActivity : AppCompatActivity() {
                 parent: AdapterView<*>?,
                 itemSelected: View?, selectedItemPosition: Int, selectedId: Long
             ) {
-                val choose = resources.getStringArray(R.array.presets)
+                val choose = resources.getStringArray(R.array.serverSelect)
                 islocal = choose[selectedItemPosition] != "Сервер"
+                if(choose[selectedItemPosition] == "Сервер"){
+                    chooseUrl()
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -107,6 +124,22 @@ class MainActivity : AppCompatActivity() {
         }
         editor.putStringSet("dotsForDrawLine", set)
         editor.commit()
+    }
+    fun chooseUrl(){
+        var editText = EditText(this)
+        editText.width = 600
+        editText.setText(url)
+        var button = Button(this)
+        button.top = 0
+        button.x = 600F
+        button.text = "Ввод"
+        button.setOnClickListener {
+           url = editText.text.toString()
+            chartContainer.removeView(button)
+            chartContainer.removeView(editText)
+        }
+        chartContainer.addView(editText)
+        chartContainer.addView(button)
     }
 
 }

@@ -1,4 +1,4 @@
-package com.kurtlike.lab4android.chart
+package com.kurtlike.lab5android.chart
 
 import android.graphics.Canvas
 import android.graphics.Color

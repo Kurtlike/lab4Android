@@ -1,11 +1,10 @@
-package com.kurtlike.lab4android
+package com.kurtlike.lab5android
 
 import android.content.Context
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.google.gson.Gson
-import com.kurtlike.lab4android.datainput.Dot
+import com.kurtlike.lab5android.datainput.Dot
 import org.json.JSONArray
 import org.json.JSONObject
 

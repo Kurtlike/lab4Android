@@ -1,4 +1,4 @@
-package com.kurtlike.lab4android
+package com.kurtlike.lab5android
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

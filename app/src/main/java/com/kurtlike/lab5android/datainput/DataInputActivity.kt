@@ -1,18 +1,14 @@
-package com.kurtlike.lab4android.datainput
+package com.kurtlike.lab5android.datainput
 
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
-import androidx.core.view.children
-import androidx.core.view.get
 import androidx.gridlayout.widget.GridLayout
 import com.google.gson.Gson
-import com.kurtlike.lab4android.R
-import kotlinx.android.synthetic.main.activity_main.*
+import com.kurtlike.lab5android.R
 
 
 class DataInputActivity: Activity() {

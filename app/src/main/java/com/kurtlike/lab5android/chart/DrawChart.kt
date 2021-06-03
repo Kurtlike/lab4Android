@@ -1,4 +1,4 @@
-package com.kurtlike.lab4android.chart
+package com.kurtlike.lab5android.chart
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
-import com.kurtlike.lab4android.datainput.Dot
+import com.kurtlike.lab5android.datainput.Dot
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashSet
