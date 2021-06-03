@@ -72,7 +72,7 @@ class DataInputActivity: Activity() {
         dotList.clear()
         form.removeAllViews()
         preset.dots.forEach {
-            form.addView(dotForm.addDotForm(form, it.index.toString(), it.x, it.y))
+            form.addView(dotForm.addDotForm(form, dotCounter.toString(), it.x, it.y))
             dotList.add(it)
             dotCounter++
         }
@@ -137,14 +137,11 @@ class DataInputActivity: Activity() {
         dotCounter = preferences.getInt("counter",0)
         preferences.getStringSet("dots", HashSet())?.forEach {
             val dot = gson.fromJson(it, Dot::class.java)
-            if(dot.index ==-1){
-                dot.index = dotCounter
-                dotCounter++
-            }
             dotList.add(dot)
         }
         dotList.forEach {
-            form.addView(dotForm.addDotForm(form, it.index.toString(), it.x, it.y))
+            form.addView(dotForm.addDotForm(form,dotCounter.toString(), it.x, it.y))
+            dotCounter++
         }
     }
 }

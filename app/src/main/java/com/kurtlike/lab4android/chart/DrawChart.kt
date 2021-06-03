@@ -26,10 +26,10 @@ class DrawChart(context: Context): View(context) {
     private var xIntervals = floatArrayOf(0.1f * xScale, 0.1f * xScale)
     private var yIntervals = floatArrayOf(0.1f * yScale, 0.1f * yScale)
     private var dots = ArrayList<Dot>()
-    var xMoveStart = 0f
-    var yMoveStart = 0f
-    var xUpdateStart =0f
-    var yUpdateStart =0f
+    private var xMoveStart = 0f
+    private var yMoveStart = 0f
+    private var xUpdateStart =0f
+    private var yUpdateStart =0f
     //var inTouch = false
     //var isZoom = false
     //var xZoomStart = 0f
@@ -56,7 +56,7 @@ class DrawChart(context: Context): View(context) {
         moveChartListener()
     }
 
-    fun createXAxis(canvas: Canvas){
+    private fun createXAxis(canvas: Canvas){
         setNormalLinePreset()
         canvas.drawLine(xMin.toFloat(), yNull.toFloat(), xMax.toFloat(), yNull.toFloat(), paint)
         val scale = xScale
@@ -84,7 +84,7 @@ class DrawChart(context: Context): View(context) {
         }
 
     }
-    fun createYAxis(canvas: Canvas){
+    private fun createYAxis(canvas: Canvas){
         setNormalLinePreset()
         canvas.drawLine(xNull.toFloat(), yMax.toFloat(), xNull.toFloat(), yMin.toFloat(), paint)
         val scale = yScale
@@ -113,7 +113,7 @@ class DrawChart(context: Context): View(context) {
         }
 
     }
-    fun setDottedLinePreset(){
+    private fun setDottedLinePreset(){
         xIntervals = floatArrayOf(0.1f * xScale, 0.1f * xScale)
         yIntervals = floatArrayOf(0.1f * yScale, 0.1f * yScale)
 
@@ -123,14 +123,14 @@ class DrawChart(context: Context): View(context) {
         paint.color = Color.argb(100,0,0,255)
         paint.style = Paint.Style.STROKE
     }
-    fun setNormalLinePreset(){
+    private fun setNormalLinePreset(){
         dashPathEffect = DashPathEffect(floatArrayOf(1F,0F), 0F)
         paint.pathEffect = dashPathEffect
         paint.strokeWidth = 5F
         paint.color = Color.argb(255,0,0,255)
         paint.style = Paint.Style.STROKE
     }
-    fun setTextlLinePreset(){
+    private fun setTextlLinePreset(){
         dashPathEffect = DashPathEffect(floatArrayOf(1F,0F), 0F)
         paint.pathEffect = dashPathEffect
         paint.strokeWidth = 3F
@@ -138,7 +138,7 @@ class DrawChart(context: Context): View(context) {
         paint.color = Color.argb(255,0,0,255)
         paint.style = Paint.Style.STROKE
     }
-    fun addDots(dots:ArrayList<Dot>, canvas: Canvas){
+    private fun addDots(dots:ArrayList<Dot>, canvas: Canvas){
         paint.isAntiAlias = true
         paint.strokeWidth = 20F
         paint.color = Color.argb(255,255,0,0)
@@ -153,11 +153,8 @@ class DrawChart(context: Context): View(context) {
     @SuppressLint("ClickableViewAccessibility")
     fun moveChartListener(){
         this.setOnTouchListener { v, event ->
-            val actionMask = event.actionMasked
-            val pointerIndex = event.actionIndex
-            val pointerCount = event.pointerCount
 
-            when (actionMask) {
+            when (event.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
                     xMoveStart = event.x
                     xUpdateStart = event.x
@@ -210,11 +207,11 @@ class DrawChart(context: Context): View(context) {
             v?.onTouchEvent(event) ?: true
         }
     }
-    fun savedot(x: Double, y:Double){
+    private fun savedot(x: Double, y:Double){
         val preferences =  context.getSharedPreferences("Dots", Context.MODE_PRIVATE)
         val editor = preferences.edit()
         val gson = Gson()
-        dots.add(Dot(-1,x.toDouble(),y.toDouble()))
+        dots.add(Dot(x, y))
         editor.clear()
         val set = HashSet<String>()
         editor.clear()
@@ -223,7 +220,7 @@ class DrawChart(context: Context): View(context) {
             set.add(jString)
         }
         editor.putStringSet("dots", set)
-        editor.commit()
+        editor.apply()
     }
 
 

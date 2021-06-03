@@ -11,7 +11,7 @@ class Presets {
         for (i in 1..13){
             val x = i - 7
             val y = Math.pow(x.toDouble(), 2.0)
-            val dot = Dot(i, x.toDouble(), y)
+            val dot = Dot(x.toDouble(), y)
             preset1.dots.add(dot)
         }
         presets.add(preset1)
@@ -21,7 +21,7 @@ class Presets {
         for (i in 1..13){
             val x = i - 7
             val y = Math.sin(x.toDouble())
-            val dot = Dot(i, x.toDouble(), y)
+            val dot = Dot(x.toDouble(), y)
             preset2.dots.add(dot)
         }
         presets.add(preset2)
@@ -31,7 +31,7 @@ class Presets {
         for (i in 1..13){
             val x = i - 7
             val y = x.toDouble()
-            val dot = Dot(i, x.toDouble(), y)
+            val dot = Dot(x.toDouble(), y)
             preset3.dots.add(dot)
         }
         presets.add(preset3)

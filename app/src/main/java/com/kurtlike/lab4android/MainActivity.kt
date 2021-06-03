@@ -26,10 +26,11 @@ class MainActivity : AppCompatActivity() {
     val dots = ArrayList<Dot>()
     var islocal = true
     var isFunctionSolve = false
+    lateinit var serverRequests: ServerRequests
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        serverRequests = ServerRequests(this)
         dotInputButton.setOnClickListener {
             val intent = Intent(this, DataInputActivity::class.java)
             startActivity(intent)
@@ -38,6 +39,7 @@ class MainActivity : AppCompatActivity() {
         solveFunc.setOnClickListener {
             loadDots()
             isFunctionSolve = true
+            serverRequests.getDunctionalDots("http://192.168.88.254:8082/lab4/getAnswer",dots)
             chartReload.performClick()
         }
         xValueButton.setOnClickListener{
