@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
             else{
                 loadDots()
                 goodOldIO.setDotsForInterpolate(dots)
+                goodOldIO.solve()
                 saveDotsForFuncDraw(goodOldIO.getDotsForDraw())
                 chartReload.performClick()
                 isFunctionSolve = true
@@ -54,7 +55,7 @@ class MainActivity : AppCompatActivity() {
             if(!islocal) {
                 if (isFunctionSolve) {
                     serverRequests.getXvalue(
-                        "http://192.168.88.254:8082/lab5/getXValue",
+                        "http://$url/lab5/getXValue",
                         xValue.text.toString().toDouble()
                     ) {
                         xValue.setText(it.toString())

@@ -10,7 +10,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Lab4Android">
+        android:theme="@style/Theme.Lab4Android"
+        android:usesCleartextTraffic="true">
 
         <activity android:name="com.kurtlike.lab5android.MainActivity"
             android:theme="@style/Theme.MaterialComponents.NoActionBar"

@@ -105,7 +105,7 @@ class DrawChart(context: Context): View(context) {
             path.lineTo((xMax).toFloat(), (yNull - i * scale).toFloat())
             canvas.drawPath(path, paint)
             setTextlLinePreset()
-            canvas.drawText(( - i).toString(), (xNull).toFloat() - 20, (yNull - i * scale).toFloat() + 20, paint)
+            canvas.drawText(i.toString(), (xNull).toFloat() - 20, (yNull - i * scale).toFloat() + 20, paint)
         }
 
         val numberOfHatchsMoreNull = (yMax - yNull)/(scale)
@@ -116,7 +116,7 @@ class DrawChart(context: Context): View(context) {
             path.lineTo((xMax).toFloat(), (yNull + i * scale).toFloat())
             canvas.drawPath(path, paint)
             setTextlLinePreset()
-            canvas.drawText(i.toString(), (xNull).toFloat() - 20, (yNull + i * scale).toFloat() + 20, paint)
+            canvas.drawText(( - i).toString(), (xNull).toFloat() - 20, (yNull + i * scale).toFloat() + 20, paint)
 
         }
 
