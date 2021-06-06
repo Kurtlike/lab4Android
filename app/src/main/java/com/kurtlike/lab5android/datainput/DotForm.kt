@@ -1,15 +1,12 @@
-package com.kurtlike.lab4android.datainput
+package com.kurtlike.lab5android.datainput
 
-import android.content.Context
 import android.text.InputType.TYPE_CLASS_NUMBER
-import android.view.View
 import android.view.ViewGroup
 import android.view.ViewManager
 import android.widget.*
 import androidx.core.view.children
 import androidx.core.view.get
-import com.kurtlike.lab4android.R
-import java.util.Map.entry
+import com.kurtlike.lab5android.R
 
 
 class  DotForm {

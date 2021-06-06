@@ -1,4 +1,4 @@
-package com.kurtlike.lab4android.datainput
+package com.kurtlike.lab5android.datainput
 
 import org.json.JSONObject
 

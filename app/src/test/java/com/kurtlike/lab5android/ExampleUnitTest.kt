@@ -1,4 +1,4 @@
-package com.kurtlike.lab4android
+package com.kurtlike.lab5android
 
 import org.junit.Test
 
