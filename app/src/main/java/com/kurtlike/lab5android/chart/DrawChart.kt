@@ -90,7 +90,6 @@ class DrawChart(context: Context): View(context) {
             setTextlLinePreset()
             canvas.drawText(i.toString(), (xNull + i * scale).toFloat() - 20, yNull.toFloat() + 20, paint)
         }
-
     }
     private fun createYAxis(canvas: Canvas){
         setNormalLinePreset()

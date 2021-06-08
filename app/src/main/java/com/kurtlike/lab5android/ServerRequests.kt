@@ -14,9 +14,9 @@ class ServerRequests(context: Context) {
     val resultDots = ArrayList<Dot>()
     var xAnswer = 0.0
 
-    fun getFunctionalDots(url: String, dots: ArrayList<Dot>, callback: (result: ArrayList<Dot>) ->Unit){
+    fun getFunctionalDots(url: String, dots: ArrayList<Dot>,methodName: String, callback: (result: ArrayList<Dot>) ->Unit){
         var jsonArray = JSONArray()
-        var jsonString = "{\"dots\":["
+        var jsonString = "{ \"methodName\": \"$methodName\",\"dots\":["
         dots.forEach {
             jsonString += it.toJsonString() + ","
         }
