@@ -16,7 +16,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
-    val dots = ArrayList<Dot>()
+    var dots = ArrayList<Dot>()
+    lateinit var methodname:String
     var islocal = true
     var isFunctionSolve = false
     var url ="192.168.88.254:8082"
@@ -35,7 +36,8 @@ class MainActivity : AppCompatActivity() {
         solveFunc.setOnClickListener {
             if(!islocal){
                 loadDots()
-                serverRequests.getFunctionalDots("http://$url/lab5/getAnswer",dots) {
+                loadmethodName()
+                serverRequests.getFunctionalDots("http://$url/lab5/getAnswer",dots,methodname) {
                     saveDotsForFuncDraw(it)
                     chartReload.performClick()
                 }
@@ -112,6 +114,10 @@ class MainActivity : AppCompatActivity() {
         preferences.getStringSet("dots", HashSet())?.forEach {
             dots.add(gson.fromJson(it, Dot::class.java))
         }
+    }
+    fun loadmethodName(){
+        val preferences = getSharedPreferences("Dots", MODE_PRIVATE)
+        methodname = preferences.getString("method","").toString()
     }
     fun saveDotsForFuncDraw(dots: ArrayList<Dot>){
         val preferences =  getSharedPreferences("DotsForDrawLine", Context.MODE_PRIVATE)

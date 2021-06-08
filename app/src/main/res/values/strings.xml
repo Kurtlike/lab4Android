@@ -14,4 +14,9 @@
         <item>Локально</item>
         <item>Сервер</item>
     </string-array>
+
+    <string-array name="methodSelect">
+        <item>Полином Лагранжа</item>
+        <item>Полином Ньютона</item>
+    </string-array>
 </resources>
